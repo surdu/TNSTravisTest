@@ -24,6 +24,7 @@ install:
   - npm install -g nativescript
   - tns usage-reporting disable
   - tns error-reporting disable
+  - npm install
 
 before_script:
   - echo no | android create avd --force -n test -t android-21 -b armeabi-v7a
@@ -31,5 +32,4 @@ before_script:
   - android-wait-for-emulator
 
 script:
-  - npm run travissetup
-  - npm run travistest
+  - tns test android
