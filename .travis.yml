@@ -24,11 +24,9 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-before_install:
-  - npm install -g npm@4
-
 install:
   - nvm install node
+  - npm install -g npm@4
   - npm install -g nativescript --ignore-scripts
   - tns usage-reporting disable
   - tns error-reporting disable
