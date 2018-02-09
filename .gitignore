@@ -50,3 +50,4 @@ e2e/reports/*
 *.DS_Store
 logs/*
 package-lock.json
+builds/*
