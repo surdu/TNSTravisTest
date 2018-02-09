@@ -43,3 +43,10 @@ fastlane/*.*
 .node_repl_history
 
 app/misc/WebViewClient.android.js
+
+# Automation log and reports
+e2e/reports/*
+*.log
+*.DS_Store
+logs/*
+package-lock.json
