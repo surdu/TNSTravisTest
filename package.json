@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build-android" : "tns build android --copy-to ./builds",
-    "test-only-smoke-android": "npm run build-android && wdio wdio.conf.android.js --suite smoke"
+    "test-only-smoke-android": "wdio wdio.conf.android.js --suite smoke"
   },
   "dependencies": {
     "nativescript-theme-core": "~1.0.4",
