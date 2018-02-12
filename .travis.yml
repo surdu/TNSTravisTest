@@ -32,11 +32,11 @@ install:
   - tns usage-reporting disable
   - tns error-reporting disable
 
-before_script:
-  - android list targets
-  - echo no | android create avd --force -n test -t android-24 -b armeabi-v7a
-  - emulator -avd test -no-audio -no-window &
-  - android-wait-for-emulator
+# before_script:
+#   - android list targets
+#   - echo no | android create avd --force -n test -t android-24 -b armeabi-v7a
+#   - emulator -avd test -no-audio -no-window &
+#   - android-wait-for-emulator
 
 script:
   - npm run build-android
