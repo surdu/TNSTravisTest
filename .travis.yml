@@ -1,6 +1,6 @@
 env:
   global:
-    - NODE_VERSION=6.9.4
+    - ANDROID_API=24
 
 language: android
 
@@ -10,11 +10,12 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-25.0.2
-    - android-24
+    - tools #intended duplicate
+    - build-tools-27.0.2
+    - android-$ANDROID_API
     - extra-android-m2repository
-    - sys-img-armeabi-v7a-android-24
-    - sys-img-x86-android-24
+    - sys-img-armeabi-v7a-android-$ANDROID_API
+    - sys-img-x86-android-$ANDROID_API
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -32,11 +33,12 @@ install:
   - tns usage-reporting disable
   - tns error-reporting disable
 
-# before_script:
-#   - android list targets
-#   - echo no | android create avd --force -n test -t android-24 -b armeabi-v7a
-#   - emulator -avd test -no-audio -no-window &
-#   - android-wait-for-emulator
+before_script:
+  - android list targets
+  - echo no | android create avd --force -n test -t "android-"$ANDROID_API -b armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 
 script:
   - npm run build-android
