@@ -1,6 +1,5 @@
 env:
   global:
-    - ANDROID_API=27
     - EMULATOR_API=24
 
 language: android
@@ -14,10 +13,8 @@ android:
     - platform-tools
     - tools #intended duplicate
     - build-tools-27.0.2
-    - android-$ANDROID_API
     - extra-android-m2repository
     - sys-img-armeabi-v7a-android-$EMULATOR_API
-    - sys-img-x86-android-$ANDROID_API
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
