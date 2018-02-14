@@ -1,6 +1,7 @@
 env:
   global:
-    - ANDROID_API=24
+    - ANDROID_API=27
+    - EMULATOR_API=24
 
 language: android
 
@@ -9,12 +10,13 @@ jdk: oraclejdk8
 android:
   components:
     - tools
+    - android-$EMULATOR_API
     - platform-tools
     - tools #intended duplicate
     - build-tools-27.0.2
     - android-$ANDROID_API
     - extra-android-m2repository
-    - sys-img-armeabi-v7a-android-$ANDROID_API
+    - sys-img-armeabi-v7a-android-$EMULATOR_API
     - sys-img-x86-android-$ANDROID_API
 
 before_cache:
@@ -26,6 +28,9 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+before_install:
+  - yes | sdkmanager "platforms;android-27"
+
 install:
   - nvm install node
   - npm install -g npm@4
@@ -34,9 +39,11 @@ install:
   - tns error-reporting disable
 
 before_script:
+  - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
+  - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
   - android list targets
-  - echo no | android create avd --force -n test -t "android-"$ANDROID_API -b armeabi-v7a
-  - emulator -avd test -no-audio -no-window &
+  - echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
+  - emulator -avd test -no-skin -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
