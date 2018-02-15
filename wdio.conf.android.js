@@ -4,7 +4,7 @@ var APP_PATH = './builds/app.apk';
 var device_Name = 'Android Emulator';
 
 exports.config = merge(wdioConfBase.config, {
-  host: '127.0.0.1',
+  host: 'localhost',
   port: '4723',
 
   capabilities: [{
@@ -26,7 +26,7 @@ exports.config = merge(wdioConfBase.config, {
   services: ['appium'],
   appium: {
     args: {
-      address: '127.0.0.1',
+      address: 'localhost',
       commandTimeout: '7200',
       sessionOverride: true,
       debugLogSpacing: true,
