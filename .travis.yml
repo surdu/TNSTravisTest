@@ -36,8 +36,6 @@ install:
   - tns error-reporting disable
 
 before_script:
-  - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
-  - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
   - android list targets
   - echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
   - emulator -avd test -no-window &
