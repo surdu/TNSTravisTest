@@ -13,7 +13,7 @@
     }
   },
   "scripts": {
-    "build-android": "tns build android --copy-to ./builds",
+    "build-android": "tns build android --copy-to ./builds/app.apk",
     "test-only-smoke-android": "wdio wdio.conf.android.js --suite smoke"
   },
   "dependencies": {

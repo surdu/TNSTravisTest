@@ -1,6 +1,6 @@
 let merge = require('deepmerge');
 let wdioConfBase = require('./wdio.conf.base.js');
-var APP_PATH = './builds/TNSTravisTest-debug.apk';
+var APP_PATH = './builds/app.apk';
 var device_Name = 'Android Emulator';
 
 exports.config = merge(wdioConfBase.config, {
