@@ -2,48 +2,65 @@ env:
   global:
     - EMULATOR_API=24
 
-language: android
+matrix:
+  include:
+    - language: objective-c
 
-jdk: oraclejdk8
+      osx_image: xcode9.2
 
-android:
-  components:
-    - tools
-    - android-$EMULATOR_API
-    - platform-tools
-    - tools #intended duplicate
-    - build-tools-27.0.2
-    - extra-android-m2repository
-    - sys-img-armeabi-v7a-android-$EMULATOR_API
+      install:
+        - nvm install node
+        - npm install -g npm@4
+        - npm install -g nativescript --ignore-scripts
+        - tns usage-reporting disable
+        - tns error-reporting disable
 
-before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+      script:
+        - tns test ios --justlaunch
 
-cache:
-  directories:
-    - .nvm
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
 
-before_install:
-  - yes | sdkmanager "platforms;android-27"
-
-install:
-  - nvm install node
-  - npm install -g npm@4
-  - npm install -g nativescript --ignore-scripts
-  - tns usage-reporting disable
-  - tns error-reporting disable
-  - npm install -g appium@1.7.2
-
-before_script:
-  - echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
-  - emulator -avd test -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
-
-script:
-  - tns test android --justlaunch
-  - rm -rf /platforms
-  - npm run build-android
-  - npm run test-only-smoke-android
+    # - language: android
+    #
+    #   jdk: oraclejdk8
+    #
+    #   android:
+    #     components:
+    #       - tools
+    #       - android-$EMULATOR_API
+    #       - platform-tools
+    #       - tools #intended duplicate
+    #       - build-tools-27.0.2
+    #       - extra-android-m2repository
+    #       - sys-img-armeabi-v7a-android-$EMULATOR_API
+    #
+    #   before_cache:
+    #     - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+    #
+    #   cache:
+    #     directories:
+    #       - .nvm
+    #       - $HOME/.gradle/caches/
+    #       - $HOME/.gradle/wrapper/
+    #
+    #   before_install:
+    #     - yes | sdkmanager "platforms;android-27"
+    #
+    #   install:
+    #     - nvm install node
+    #     - npm install -g npm@4
+    #     - npm install -g nativescript --ignore-scripts
+    #     - tns usage-reporting disable
+    #     - tns error-reporting disable
+    #     - npm install -g appium@1.7.2
+    #
+    #   before_script:
+    #     - echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
+    #     - emulator -avd test -no-window &
+    #     - android-wait-for-emulator
+    #     - adb shell input keyevent 82 &
+    #
+    #   script:
+    #     - tns test android --justlaunch
+    #     - rm -rf /platforms
+    #     - npm run build-android
+    #     - npm run test-only-smoke-android
