@@ -84,14 +84,14 @@ exports.config = {
   // Test reporter for stdout.
   // The only one supported by default is 'dot'
   // see also: http://webdriver.io/guide/testrunner/reporters.html
-  reporters: ['spec', 'junit'],
+  // reporters: ['spec', 'junit'],
 
   // Some reporter require additional information which should get defined here
-  reporterOptions: {
-    junit: {
-      outputDir: './e2e/reports/'
-    }
-  },
+  // reporterOptions: {
+  //   junit: {
+  //     outputDir: './e2e/reports/'
+  //   }
+  // },
 
   plugins: {
     'wdio-screenshot': {}
@@ -129,42 +129,42 @@ exports.config = {
     global.type = process.env.type;
   },
 
-  deleteFolderRecursive: function(path) {
-    var self = this;
+  // deleteFolderRecursive: function(path) {
+  //   var self = this;
+  //
+  //   if (fs.existsSync(path) && path != '/') {
+  //     fs.readdirSync(path).forEach(function(file, index) {
+  //       var curPath = path + "/" + file;
+  //       if (fs.lstatSync(curPath).isDirectory()) { // recurse
+  //         self.deleteFolderRecursive(curPath);
+  //       } else { // delete file
+  //         fs.unlinkSync(curPath);
+  //       }
+  //     });
+  //     fs.rmdirSync(path);
+  //   }
+  // },
 
-    if (fs.existsSync(path) && path != '/') {
-      fs.readdirSync(path).forEach(function(file, index) {
-        var curPath = path + "/" + file;
-        if (fs.lstatSync(curPath).isDirectory()) { // recurse
-          self.deleteFolderRecursive(curPath);
-        } else { // delete file
-          fs.unlinkSync(curPath);
-        }
-      });
-      fs.rmdirSync(path);
-    }
-  },
+  // onPrepare: function() {
+  //
+  //   if (fs.existsSync(__dirname + '/e2e/reports'))
+  //     this.deleteFolderRecursive(__dirname + '/e2e/reports');
+  //
+  //   if (!fs.existsSync(__dirname + '/e2e/reports')) {
+  //     fs.mkdirSync(__dirname + '/e2e/reports');
+  //     fs.mkdirSync(__dirname + '/e2e/reports/screenShots');
+  //   }
+  // },
 
-  onPrepare: function() {
-
-    if (fs.existsSync(__dirname + '/e2e/reports'))
-      this.deleteFolderRecursive(__dirname + '/e2e/reports');
-
-    if (!fs.existsSync(__dirname + '/e2e/reports')) {
-      fs.mkdirSync(__dirname + '/e2e/reports');
-      fs.mkdirSync(__dirname + '/e2e/reports/screenShots');
-    }
-  },
-
-  afterStep: function(step) {
-    if (step.getStatus() === 'failed') {
-      let stepName = step.getStep().getName();
-      let featureName = step.getStep().getScenario().getFeature().getName();
-      let screenShot = './e2e/reports/screenShots/' + new Date().getTime() + featureName + ' ' + stepName + ' ' + '.png';
-      console.log('Screenshot was added: ' + screenShot);
-      browser.saveViewportScreenshot(screenShot);
-    }
-  },
+  // afterStep: function(step) {
+  //   if (step.getStatus() === 'failed') {
+  //     let stepName = step.getStep().getName();
+  //     let featureName = step.getStep().getScenario().getFeature().getName();
+  //     let screenShot = './e2e/reports/screenShots/' + new Date().getTime() + featureName + ' ' + stepName + ' ' + '.png';
+  //     console.log('Screenshot was added: ' + screenShot);
+  //     browser.saveViewportScreenshot(screenShot);
+  //   }
+  // },
 
   services: ['selenium-standalone']
 };
