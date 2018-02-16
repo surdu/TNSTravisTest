@@ -30,7 +30,6 @@ matrix:
           - platform-tools
           - tools #intended duplicate
           - build-tools-27.0.2
-          - extra-android-m2repository
           - sys-img-armeabi-v7a-android-$EMULATOR_API
 
       before_cache:
@@ -41,9 +40,6 @@ matrix:
           - .nvm
           - $HOME/.gradle/caches/
           - $HOME/.gradle/wrapper/
-
-      # before_install:
-      #   - yes | sdkmanager "platforms;android-27"
 
       before_script:
         - echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
