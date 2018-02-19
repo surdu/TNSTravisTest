@@ -4,7 +4,7 @@ install:
   - npm install -g nativescript --ignore-scripts
   - tns usage-reporting disable
   - tns error-reporting disable
-  - npm install -g appium@1.7.1
+  - npm install -g appium@1.7.2
 
 matrix:
   include:
@@ -19,7 +19,7 @@ matrix:
     - language: android
 
       env:
-        - EMULATOR_API=24
+        - EMULATOR_API=22
 
       jdk: oraclejdk8
 
