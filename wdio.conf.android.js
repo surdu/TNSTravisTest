@@ -27,6 +27,7 @@ exports.config = merge(wdioConfBase.config, {
   appium: {
     args: {
       address: 'localhost',
+      port: '4723',
       commandTimeout: '7200',
       sessionOverride: true,
       debugLogSpacing: true,
@@ -36,11 +37,11 @@ exports.config = merge(wdioConfBase.config, {
       autoAcceptAlerts: true,
       app: APP_PATH
     }
-  },
-
-  onPrepare: function() {
-    let appiumController = require('appium-controller');
-    appiumController.startAppium();
   }
+
+  // onPrepare: function() {
+  //   let appiumController = require('appium-controller');
+  //   appiumController.startAppium();
+  // }
 
 });
