@@ -9,7 +9,7 @@ exports.config = merge(wdioConfBase.config, {
 
   capabilities: [{
     automationName: "appium",
-    commandTimeout: '7200',
+    commandTimeout: 20000,
     sessionOverride: true,
     debugLogSpacing: true,
     platformName: 'Android',
@@ -28,7 +28,7 @@ exports.config = merge(wdioConfBase.config, {
     args: {
       address: 'localhost',
       port: '4723',
-      commandTimeout: '7200',
+      commandTimeout: 20000,
       sessionOverride: true,
       debugLogSpacing: true,
       platformName: 'Android',
