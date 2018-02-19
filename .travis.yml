@@ -48,8 +48,9 @@ matrix:
         - adb shell input keyevent 82 &
 
       script:
-        - tns test android --justlaunch
+        # - tns test android --justlaunch
         - appium --log-level info &
-        - rm -rf /platforms
+        - sleep 10
+        # - rm -rf /platforms
         - npm run build-android
         - npm run test-only-smoke-android
