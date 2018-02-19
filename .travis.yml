@@ -49,7 +49,7 @@ matrix:
 
       script:
         - tns test android --justlaunch
-        - appium &
+        - appium --log-level info &
         - rm -rf /platforms
         - npm run build-android
         - npm run test-only-smoke-android
