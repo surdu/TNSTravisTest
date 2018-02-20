@@ -19,7 +19,7 @@ matrix:
     - language: android
 
       env:
-        - EMULATOR_API=23
+        - EMULATOR_API=22
 
       jdk: oraclejdk8
 
