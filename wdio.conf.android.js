@@ -37,11 +37,11 @@ exports.config = merge(wdioConfBase.config, {
       autoAcceptAlerts: true,
       app: APP_PATH
     }
-  }
+  },
 
-  // onPrepare: function() {
-  //   let appiumController = require('appium-controller');
-  //   appiumController.startAppium();
-  // }
+  onPrepare: function() {
+    let appiumController = require('appium-controller');
+    appiumController.startAppium();
+  }
 
 });

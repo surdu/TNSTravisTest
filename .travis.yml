@@ -16,40 +16,39 @@ matrix:
         - tns test ios --justlaunch
 
 
-    # - language: android
-    #
-    #   env:
-    #     - EMULATOR_API=22
-    #
-    #   jdk: oraclejdk8
-    #
-    #   android:
-    #     components:
-    #       - tools
-    #       - android-$EMULATOR_API
-    #       - platform-tools
-    #       - tools #intended duplicate
-    #       - build-tools-27.0.2
-    #       - sys-img-armeabi-v7a-android-$EMULATOR_API
-    #
-    #   before_cache:
-    #     - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-    #
-    #   cache:
-    #     directories:
-    #       - .nvm
-    #       - $HOME/.gradle/caches/
-    #       - $HOME/.gradle/wrapper/
-    #
-    #   before_script:
-    #     - echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
-    #     - emulator -avd test -no-window &
-    #     - android-wait-for-emulator
-    #     - adb shell input keyevent 82 &
-    #
-    #   script:
-    #     - tns test android --justlaunch
-    #     # - appium --log-level error &
-    #     # - rm -rf /platforms
-    #     # - npm run build-android
-    #     # - npm run test-only-smoke-android
+    - language: android
+
+      env:
+        - EMULATOR_API=22
+
+      jdk: oraclejdk8
+
+      android:
+        components:
+          - tools
+          - android-$EMULATOR_API
+          - platform-tools
+          - tools #intended duplicate
+          - build-tools-27.0.2
+          - sys-img-armeabi-v7a-android-$EMULATOR_API
+
+      before_cache:
+        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+      cache:
+        directories:
+          - .nvm
+          - $HOME/.gradle/caches/
+          - $HOME/.gradle/wrapper/
+
+      before_script:
+        - echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
+        - emulator -avd test -no-window &
+        - android-wait-for-emulator
+        - adb shell input keyevent 82 &
+
+      script:
+        # - tns test android --justlaunch
+        # - rm -rf /platforms
+        - npm run build-android
+        - npm run test-only-smoke-android
