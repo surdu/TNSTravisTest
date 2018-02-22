@@ -10,8 +10,10 @@ let TestPage = {
   launchAndTap: {
     value: function() {
       browser.launch();
+      console.log("Launched");
       var i = 0;
       while (i < 3){
+        console.log("CLICKED");
         this.tapButton.click();
         browser.pause();
         i++;
