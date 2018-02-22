@@ -41,7 +41,9 @@ exports.config = merge(wdioConfBase.config, {
 
   onPrepare: function() {
     let appiumController = require('appium-controller');
+    console.log("########## APPIUM will START SOON.")
     appiumController.startAppium();
+    console.log("########## APPIUM is up and running.")
   }
 
 });

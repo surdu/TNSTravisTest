@@ -19,7 +19,7 @@ matrix:
     - language: android
 
       env:
-        - EMULATOR_API=22
+        - EMULATOR_API=25
 
       jdk: oraclejdk8
 
@@ -48,7 +48,10 @@ matrix:
         - adb shell input keyevent 82 &
 
       script:
-        # - tns test android --justlaunch
-        # - rm -rf /platforms
+        - tns test android --justlaunch
+        - appium &
+        - lsof -n -i:4723 | grep LISTEN
+        - rm -rf /platforms
         - npm run build-android
+        - lsof -n -i:4723 | grep LISTEN
         - npm run test-only-smoke-android
