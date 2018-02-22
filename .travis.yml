@@ -42,6 +42,7 @@ matrix:
           - $HOME/.gradle/wrapper/
 
       before_script:
+        - android list targets
         - echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
         - emulator -avd test -no-window &
         - android-wait-for-emulator
@@ -49,9 +50,6 @@ matrix:
 
       script:
         # - tns test android --justlaunch
-        # - appium &
-        # - lsof -n -i:4723 | grep LISTEN
         # - rm -rf /platforms
         - npm run build-android
-        - lsof -n -i:4723 | grep LISTEN
         - npm run test-only-smoke-android
