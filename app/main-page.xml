@@ -28,5 +28,20 @@ https://docs.nativescript.org/ui/components.
         <Label text="Tap the button" class="h1 text-center"/>
         <Button text="TAP" tap="{{ onTap }}" class="btn btn-primary btn-active" automationText="tapButton" />
         <Label text="{{ message }}" class="h2 text-center" automationText="hoorraayLabel" textWrap="true"/>
+
+				<TextField hint="First Name"
+				autocapitalizationType="words"
+				autocorrect="false"
+				automationText="inputUserFirstName"/>
+
+				<TextField hint="Last Name"
+				autocapitalizationType="words"
+				autocorrect="false"
+				automationText="inputUserLastName"/>
+
+				<TextField hint="Email"
+				keyboardType="email"
+				autocorrect="false"
+				automationText="inputUserEmail"/>
     </StackLayout>
 </Page>
