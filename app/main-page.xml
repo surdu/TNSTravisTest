@@ -29,7 +29,12 @@ https://docs.nativescript.org/ui/components.
         <Button text="TAP" tap="{{ onTap }}" class="btn btn-primary btn-active" automationText="tapButton" />
         <Label text="{{ message }}" class="h2 text-center" automationText="hoorraayLabel" textWrap="true"/>
 
-				<TextField hint="First Name"
+        <TextField hint="Password"
+        autocapitalizationType="words"
+        autocorrect="false"
+        automationText="inputUserPassword"/>
+
+        <TextField hint="First Name"
 				autocapitalizationType="words"
 				autocorrect="false"
 				automationText="inputUserFirstName"/>
@@ -43,5 +48,7 @@ https://docs.nativescript.org/ui/components.
 				keyboardType="email"
 				autocorrect="false"
 				automationText="inputUserEmail"/>
-    </StackLayout>
+
+
+  </StackLayout>
 </Page>

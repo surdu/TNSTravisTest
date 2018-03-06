@@ -6,14 +6,16 @@ let TestPage = {
   tapButton : {get: function () { return browser.element(`~tapButton`);}},
   hoorraayLabel : {get: function () { return browser.element(`~hoorraayLabel`);}},
 
+  firstNameTextField : {get: function () { return browser.element(`~inputUserFirstName`);}},
+  lastNameTextField : {get: function () { return browser.element(`~inputUserLastName`);}},
+  emailTextField : {get: function () { return browser.element(`~inputUserEmail`);}},
+  passwordTextField : {get: function () { return browser.element(`~inputUserPassword`);}},
 
   launchAndTap: {
     value: function() {
       browser.launch();
-      console.log("Launched");
       var i = 0;
       while (i < 3){
-        console.log("CLICKED");
         this.tapButton.click();
         browser.pause();
         i++;
@@ -21,6 +23,16 @@ let TestPage = {
 
     }
   },
+
+  fillInTextFields: {
+  value: function() {
+    this.passwordTextField.setValue("Password");
+    this.firstNameTextField.setValue("First Name");
+    this.lastNameTextField.setValue("Last Name");
+    this.emailTextField.setValue("Email");
+
+    console.log("SUCCESS");
+  }},
 
   testSuccess: {
   value: function() {
