@@ -8,7 +8,7 @@ exports.config = merge(wdioConfBase.config, {
   port: '4723',
 
   capabilities: [{
-    automationName: "appium",
+    automationName: "UiAutomator2",
     commandTimeout: 20000,
     sessionOverride: true,
     debugLogSpacing: true,
@@ -18,8 +18,8 @@ exports.config = merge(wdioConfBase.config, {
     isolateSimDevice: true,
     autoLaunch: false,
     autoAcceptAlerts: true,
-    unicodeKeyboard: true,
-    resetKeyboard: true,
+    // unicodeKeyboard: true,
+    // resetKeyboard: true,
     app: APP_PATH
   }],
 

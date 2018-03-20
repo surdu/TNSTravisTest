@@ -27,9 +27,20 @@ let TestPage = {
   fillInTextFields: {
   value: function() {
     this.passwordTextField.setValue("Password");
+    browser.pause(4000);
+    browser.hideDeviceKeyboard();
+
     this.firstNameTextField.setValue("First Name");
+    browser.pause(4000);
+    browser.hideDeviceKeyboard();
+
     this.lastNameTextField.setValue("Last Name");
+    browser.pause(4000);
+    browser.hideDeviceKeyboard();
+
     this.emailTextField.setValue("Email");
+    browser.pause(4000);
+    browser.hideDeviceKeyboard();
 
     console.log("SUCCESS");
   }},
