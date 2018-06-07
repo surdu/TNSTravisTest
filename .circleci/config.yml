@@ -59,4 +59,6 @@ workflows:
   main_workflow:
     jobs:
       - build-ios
-      - unit-test-ios
+      - unit-test-ios:
+          requires:
+            - build-ios
