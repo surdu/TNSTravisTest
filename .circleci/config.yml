@@ -59,7 +59,10 @@ jobs:
 
       - run:
           name: "iOS Unit Tests"
-          command: npx tns test ios --justlaunch
+          command: |
+            npx tns usage-reporting disable
+            npx tns error-reporting disable
+            npx tns test ios --justlaunch
 
 workflows:
   version: 2
