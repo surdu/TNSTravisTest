@@ -24,7 +24,15 @@ jobs:
             - npm-v1-{{ checksum "package.json" }}
 
       - run:
-          name: Setup
+          name: Config npm
+          command: |
+            mkdir ~/.npm-global
+            npm config set prefix '~/.npm-global'
+            echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.profile
+            source ~/.profile
+
+      - run:
+          name: Setup NativeScript
           command: |
             npm i -g nativescript@3 --ignore-scripts
             npm install
