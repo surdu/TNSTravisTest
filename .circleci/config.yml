@@ -1,48 +1,39 @@
 version: 2
 
 default_config: &default_config
-  working_directory: ~/repo/TNSTravisTest
+  working_directory: ~/TNSTravisTest
   macos:
     xcode: "9.2.0"
   environment:
     ANDROID_HOME: "/usr/local/share/android-sdk"
 
 jobs:
-  build-ios:
+  build:
     <<: *default_config
 
     steps:
       - checkout
-
-      - run:
-          name: Setup CocoaPods
-          command: |
-            curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
 
       - restore_cache:
           keys:
             - npm-v1-{{ checksum "package.json" }}
 
       - run:
-          name: Config npm
+          name: Setup CocoaPods
           command: |
-            mkdir ~/.npm-global
-            npm config set prefix '~/.npm-global'
-            echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.profile
-            source ~/.profile
+            curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
 
       - run:
           name: Setup NativeScript
           command: |
-            npm i -g nativescript@3 --ignore-scripts
+            npm i nativescript@3 --ignore-scripts
             npm install
-            tns usage-reporting disable
-            tns error-reporting disable
+            npx tns usage-reporting disable
+            npx tns error-reporting disable
 
       - save_cache:
           key: npm-v1-{{ checksum "package.json" }}
           paths:
-            - ~/.npm
             - node_modules
 
       - run:
@@ -52,10 +43,10 @@ jobs:
       - run:
           name: "Build iOS"
           command: |
-            tns prepare ios
+            npx tns prepare ios
 
       - persist_to_workspace:
-          root: ~/repo
+          root: ~/
           paths:
             - TNSTravisTest
 
@@ -64,17 +55,17 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: ~/repo
+          at: ~/
 
       - run:
           name: "iOS Unit Tests"
-          command: tns test ios --justlaunch
+          command: npx tns test ios --justlaunch
 
 workflows:
   version: 2
   main_workflow:
     jobs:
-      - build-ios
+      - build
       - unit-test-ios:
           requires:
             - build-ios
