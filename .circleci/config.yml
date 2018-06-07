@@ -1,35 +1,62 @@
-machine:
-  xcode:
-    version: 9.0.1
-dependencies:
-  cache_directories:
-    - ~/.npm
-    - ~/Library/Caches/Homebrew
-    - ~/Library/Caches/CocoaPods
-  pre:
-    # Fetch cocoapods specs from S3 instead of github
-    - curl -sS https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash
-    - npm i -g nativescript --ignore-scripts
-  override:
-    - npm set progress=false && npm install
-  post:
-    # Pre-start emulator you'll use for the specs
-    - xcrun instruments -w "iPhone 7 (11.0.1) [":
-        background: true
-compile:
-  override:
-    # Build Test App
-    - tns prepare ios || echo "ios prepare"
-    # - tns build ios
-test:
-  override:
-    # E2E
-    - tns test ios
-  post:
-    # Export results as artifacts downloadable
-    # - mv e2e/reports/**/* $CIRCLE_ARTIFACTS/
-general:
-  branches:
-    only: # list of branches to listen to
-      - master
-      - develop
+version: 2
+
+default_config: &default_config
+  working_directory: ~/TNSTravisTest
+  macos:
+    xcode: "9.2.0"
+  environment:
+    ANDROID_HOME: "/usr/local/share/android-sdk"
+
+jobs:
+  build-ios:
+    <<: *default_config
+
+    steps:
+      - checkout
+
+      - run:
+          name: Setup CocoaPods
+          command: |
+            curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
+
+      - restore_cache:
+          keys:
+            - npm-v1-{{ checksum "package-lock.json" }}
+
+      - run:
+          name: Setup
+          command: |
+            npm i -g nativescript@3 --ignore-scripts
+            npm install
+            tns usage-reporting disable
+            tns error-reporting disable
+
+      - save_cache:
+          key: npm-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+            - node_modules
+
+      - run:
+          name: Pre-start simulator
+          command: xcrun instruments -w "iPhone 8 (11.2) [" || true
+
+      - run:
+          name: "Build iOS"
+          command: |
+            tns prepare ios
+
+  unit-test-ios:
+    <<: *default_config
+
+    steps:
+      - run:
+          name: "iOS Unit Tests"
+          command: tns test ios --justlaunch
+
+workflows:
+  version: 2
+  main_workflow:
+    jobs:
+      - build-ios
+      - unit-test-ios
