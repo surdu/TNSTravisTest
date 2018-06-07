@@ -8,7 +8,7 @@ default_config: &default_config
     ANDROID_HOME: "/usr/local/share/android-sdk"
 
 jobs:
-  build:
+  build-all:
     <<: *default_config
 
     steps:
@@ -65,7 +65,7 @@ workflows:
   version: 2
   main_workflow:
     jobs:
-      - build
+      - build-all
       - unit-test-ios:
           requires:
             - build-ios
