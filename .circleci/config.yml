@@ -21,7 +21,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - npm-v1-{{ checksum "package-lock.json" }}
+            - npm-v1-{{ checksum "package.json" }}
 
       - run:
           name: Setup
@@ -32,7 +32,7 @@ jobs:
             tns error-reporting disable
 
       - save_cache:
-          key: npm-v1-{{ checksum "package-lock.json" }}
+          key: npm-v1-{{ checksum "package.json" }}
           paths:
             - ~/.npm
             - node_modules
@@ -46,10 +46,18 @@ jobs:
           command: |
             tns prepare ios
 
+      - persist_to_workspace:
+          root: ~
+          paths:
+            - TNSTravisTest
+
   unit-test-ios:
     <<: *default_config
 
     steps:
+      - attach_workspace:
+          at: ~
+
       - run:
           name: "iOS Unit Tests"
           command: tns test ios --justlaunch
