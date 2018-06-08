@@ -10,6 +10,7 @@ ios_config: &ios_config
 android_config: &android_config
   docker:
     - image: circleci/android:api-25-alpha
+    - image: circleci/node:8
   environment:
     EMULATOR_API: "25"
 
@@ -30,8 +31,6 @@ jobs:
       - run:
           name: Setup NativeScript
           command: |
-            npm i nativescript@3 --ignore-scripts
-            npm install appium@1.7.2
             npm install
             npx tns usage-reporting disable
             npx tns error-reporting disable
