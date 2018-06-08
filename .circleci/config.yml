@@ -110,7 +110,7 @@ workflows:
       - unit-test-android:
           requires:
             - build
-      -deploy:
+      - deploy:
           requires:
             - unit-test-ios
             - unit-test-android
