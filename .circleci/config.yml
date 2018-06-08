@@ -14,9 +14,6 @@ jobs:
     steps:
       - checkout
 
-      #shot in the dark at fixing unit test lock
-      - add_ssh_keys
-
       - restore_cache:
           keys:
             - npm-v1-{{ checksum "package.json" }}
@@ -25,6 +22,13 @@ jobs:
           name: Setup CocoaPods
           command: |
             curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
+
+      - run:
+          name: Setup Android
+          command: |
+            brew update
+            brew cask install android-sdk
+            echo y | $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "platforms;android-25" "build-tools;25.0.2" "extras;android;m2repository" "extras;google;m2repository"
 
       - run:
           name: Setup NativeScript
@@ -44,9 +48,12 @@ jobs:
           command: xcrun instruments -w "iPhone 8 (11.2) [" || true
 
       - run:
-          name: "Build iOS"
-          command: |
-            npx tns prepare ios
+          name: "Prepare iOS"
+          command: npx tns prepare ios
+
+      - run:
+          name: "Prepare Android"
+          command: npx tns prepare ios
 
       - persist_to_workspace:
           root: ~/
@@ -67,6 +74,31 @@ jobs:
             npx tns error-reporting disable
             npx tns test ios --justlaunch
 
+  unit-test-android:
+    <<: *default_config
+
+    steps:
+      - attach_workspace:
+          at: ~/
+
+      - run:
+          name: "iOS Unit Tests"
+          command: |
+            npx tns usage-reporting disable
+            npx tns error-reporting disable
+            npx tns test android --justlaunch
+
+  deploy:
+    <<: *default_config
+
+    steps:
+      - attach_workspace:
+          at: ~/
+
+      - run:
+          name: "Deploy"
+          command: echo "DEPLOY !!!"
+
 workflows:
   version: 2
   main_workflow:
@@ -75,3 +107,10 @@ workflows:
       - unit-test-ios:
           requires:
             - build
+      - unit-test-android:
+          requires:
+            - build
+      -deploy:
+          requires:
+            - unit-test-ios
+            - unit-test-android
