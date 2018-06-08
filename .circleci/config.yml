@@ -2,13 +2,23 @@ version: 2
 
 default_config: &default_config
   working_directory: ~/TNSTravisTest
+  docker:
+      - image: circleci/node:8
+
+ios_config: &ios_config
   macos:
     xcode: "9.2.0"
+
+android_config: &android_config
+  docker:
+    - image: circleci/android:api-25-alpha
   environment:
     ANDROID_HOME: "/usr/local/share/android-sdk"
+    EMULATOR_API: "25"
+
 
 jobs:
-  build:
+  node-setup:
     <<: *default_config
 
     steps:
@@ -24,13 +34,6 @@ jobs:
             curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
 
       - run:
-          name: Setup Android
-          command: |
-            brew update
-            brew cask install android-sdk
-            echo y | $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "platforms;android-25" "build-tools;27.0.2" "extras;android;m2repository" "extras;google;m2repository"
-
-      - run:
           name: Setup NativeScript
           command: |
             npm i nativescript@3 --ignore-scripts
@@ -44,8 +47,66 @@ jobs:
           paths:
             - node_modules
 
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - TNSTravisTest
+
+
+  android-setup:
+    <<: [*default_config, *android_config]
+
+    steps:
+      - attach_workspace:
+          at: ~/
+
+      - restore_cache:
+          keys:
+            - android-v1-{{ checksum "package.json" }}
+
+      # - run:
+      #     name: Setup Android
+      #     command: |
+      #       brew update
+      #       brew cask install android-sdk
+      #       echo y | $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "platforms;android-"$EMULATOR_API "build-tools;27.0.2" "extras;android;m2repository" "extras;google;m2repository"
+
+      # - run:
+      #     name: Pre-start Android emulator
+      #     command: |
+      #       android list targets
+      #       echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
+      #       emulator -avd test -no-window &
+
+
       - run:
-          name: Pre-start simulator
+          name: "Build Android"
+          command: |
+            npx tns prepare android
+            npx tns build android
+
+      - save_cache:
+          key: android-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+            - ~/.gradle/caches/
+            - ~/.gradle/wrapper/
+
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - TNSTravisTest
+
+
+  ios-setup:
+    <<: [*default_config, *ios_config]
+
+    steps:
+      - attach_workspace:
+          at: ~/
+
+      - run:
+          name: Pre-start iOS Simulator
           command: xcrun instruments -w "iPhone 8 (11.2) [" || true
 
       - run:
@@ -54,19 +115,14 @@ jobs:
             npx tns prepare ios
             npx tns build ios
 
-      - run:
-          name: "Build Android"
-          command: |
-            npx tns prepare android
-            npx tns build android
-
       - persist_to_workspace:
           root: ~/
           paths:
             - TNSTravisTest
 
+
   unit-test-ios:
-    <<: *default_config
+    <<: [*default_config, *ios_config]
 
     steps:
       - attach_workspace:
@@ -79,19 +135,21 @@ jobs:
             npx tns error-reporting disable
             npx tns test ios --justlaunch
 
+
   unit-test-android:
-    <<: *default_config
+    <<: [*default_config, *android_config]
 
     steps:
       - attach_workspace:
           at: ~/
 
       - run:
-          name: "iOS Unit Tests"
+          name: "Android Unit Tests"
           command: |
             npx tns usage-reporting disable
             npx tns error-reporting disable
             npx tns test android --justlaunch
+
 
   deploy:
     <<: *default_config
@@ -108,14 +166,23 @@ workflows:
   version: 2
   main_workflow:
     jobs:
-      - build
-      - unit-test-ios:
+      - node-setup
+
+      - android-setup:
           requires:
-            - build
+            - node-setup
+      - ios-setup:
+          requires:
+            - node-setup
+
       - unit-test-android:
           requires:
-            - build
+            - android-setup
+      - unit-test-ios:
+          requires:
+            - ios-setup
+
       - deploy:
           requires:
-            - unit-test-ios
             - unit-test-android
+            - unit-test-ios

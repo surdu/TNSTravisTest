@@ -49,5 +49,4 @@ e2e/reports/*
 *.log
 *.DS_Store
 logs/*
-package-lock.json
 builds/*
