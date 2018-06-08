@@ -2,8 +2,6 @@ version: 2
 
 default_config: &default_config
   working_directory: ~/TNSTravisTest
-  docker:
-      - image: circleci/node:8
 
 ios_config: &ios_config
   macos:
@@ -19,6 +17,8 @@ android_config: &android_config
 jobs:
   node-setup:
     <<: *default_config
+    docker:
+        - image: circleci/node:8
 
     steps:
       - checkout
