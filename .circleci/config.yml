@@ -26,7 +26,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - npm-v1-{{ checksum "package.json" }}
+            - npm-v2-{{ checksum "package.json" }}
 
       - run:
           name: Setup CocoaPods
@@ -43,7 +43,7 @@ jobs:
             npx tns error-reporting disable
 
       - save_cache:
-          key: npm-v1-{{ checksum "package.json" }}
+          key: npm-v2-{{ checksum "package.json" }}
           paths:
             - node_modules
 
