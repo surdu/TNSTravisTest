@@ -29,11 +29,6 @@ jobs:
             - npm-v2-{{ checksum "package.json" }}
 
       - run:
-          name: Setup CocoaPods
-          command: |
-            curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
-
-      - run:
           name: Setup NativeScript
           command: |
             npm i nativescript@3 --ignore-scripts
@@ -104,6 +99,11 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+
+      - run:
+          name: Setup CocoaPods
+          command: |
+            curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
 
       - run:
           name: Pre-start iOS Simulator
