@@ -13,7 +13,6 @@ android_config: &android_config
   docker:
     - image: circleci/android:api-25-alpha
   environment:
-    ANDROID_HOME: "/usr/local/share/android-sdk"
     EMULATOR_API: "25"
 
 
@@ -77,6 +76,8 @@ jobs:
       - run:
           name: "Build Android"
           command: |
+            npx tns usage-reporting disable
+            npx tns error-reporting disable
             npx tns prepare android
             npx tns build android
 
@@ -112,6 +113,8 @@ jobs:
       - run:
           name: "Build iOS"
           command: |
+            npx tns usage-reporting disable
+            npx tns error-reporting disable
             npx tns prepare ios
             npx tns build ios
 
