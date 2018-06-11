@@ -14,9 +14,10 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-            - npm-v2-{{ checksum "package.json" }}
+      - run:
+          name: Setup  tools
+          command: |
+            sudo ruby -e "$(curl -fsSL https://www.nativescript.org/setup/mac)" -- --silentMode
 
       - run:
           name: Setup NativeScript
@@ -24,173 +25,15 @@ jobs:
             npm install
 
       - run:
-          name: Setup  tools
-          command: |
-            sudo ruby -e "$(curl -fsSL https://www.nativescript.org/setup/mac)" -- --silentMode
-
-      - run:
           name: "Build iOS"
           command: |
             npx tns usage-reporting disable
             npx tns error-reporting disable
             npx tns prepare ios
             npx tns build ios
-
-
-      - save_cache:
-          key: npm-v2-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-
-      # - persist_to_workspace:
-      #     root: ~/
-      #     paths:
-      #       - capango-seeker
-
-
-  android-setup:
-    <<: *default_config
-
-    steps:
-      - attach_workspace:
-          at: ~/
-
-      - restore_cache:
-          keys:
-            - android-v1-{{ checksum "package.json" }}
-
-      - run:
-          name: Setup Android
-          command: |
-            brew update
-            brew cask install android-sdk
-            echo y | $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "platforms;android-"$EMULATOR_API "build-tools;27.0.2" "extras;android;m2repository" "extras;google;m2repository"
-
-      # - run:
-      #     name: Pre-start Android emulator
-      #     command: |
-      #       android list targets
-      #       echo no | android create avd --force -n test -t "android-"$EMULATOR_API -b armeabi-v7a
-      #       emulator -avd test -no-window &
-
-
-      - run:
-          name: "Build Android"
-            # export GRADLE_OPTS="-Dorg.gradle.daemon=false"
-          command: |
-            npx tns usage-reporting disable
-            npx tns error-reporting disable
-            npx tns prepare android
-            npx tns build android
-
-      - save_cache:
-          key: android-v1-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-            - ~/.gradle/caches/
-            - ~/.gradle/wrapper/
-
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - capango-seeker
-
-
-  ios-setup:
-    <<: *default_config
-
-    steps:
-      - attach_workspace:
-          at: ~/
-
-      - run:
-          name: Setup iOS environment
-          command: |
-            sudo ruby -e "$(curl -fsSL https://www.nativescript.org/setup/mac)" -- --silentMode
-
-      - run:
-          name: Pre-start iOS Simulator
-          command: xcrun instruments -w "iPhone 8 (11.2) [" || true
-
-      - run:
-          name: "Build iOS"
-          command: |
-            npx tns usage-reporting disable
-            npx tns error-reporting disable
-            npx tns prepare ios
-            npx tns build ios
-
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - capango-seeker
-
-
-  unit-test-ios:
-    <<: *default_config
-
-    steps:
-      - attach_workspace:
-          at: ~/
-
-      - run:
-          name: "iOS Unit Tests"
-          command: |
-            npx tns usage-reporting disable
-            npx tns error-reporting disable
-            npx tns test ios --justlaunch
-
-
-  unit-test-android:
-    <<: *default_config
-
-    steps:
-      - attach_workspace:
-          at: ~/
-
-      - run:
-          name: "Android Unit Tests"
-          command: |
-            npx tns usage-reporting disable
-            npx tns error-reporting disable
-            npx tns test android --justlaunch
-
-
-  deploy:
-    <<: *default_config
-
-    docker:
-        - image: circleci/node:8
-
-    steps:
-      - attach_workspace:
-          at: ~/
-
-      - run:
-          name: "Deploy"
-          command: echo "DEPLOY !!!"
 
 workflows:
   version: 2
   main_workflow:
     jobs:
       - setup
-
-      # - android-setup:
-      #     requires:
-      #       - node-setup
-      # - ios-setup:
-      #     requires:
-      #       - setup
-
-      # - unit-test-android:
-      #     requires:
-      #       - android-setup
-      # - unit-test-ios:
-      #     requires:
-      #       - setup
-      #
-      # - deploy:
-      #     requires:
-      #       # - unit-test-android
-      #       - unit-test-ios
