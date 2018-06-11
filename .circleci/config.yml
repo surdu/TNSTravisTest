@@ -4,11 +4,11 @@ default_config: &default_config
   macos:
     xcode: "9.2.0"
 
-  working_directory: ~/TNSTravisTest
+  working_directory: ~/capango-seeker
 
 
 jobs:
-  node-setup:
+  setup:
     <<: *default_config
 
     steps:
@@ -23,15 +23,29 @@ jobs:
           command: |
             npm install
 
+      - run:
+          name: Setup  tools
+          command: |
+            sudo ruby -e "$(curl -fsSL https://www.nativescript.org/setup/mac)" -- --silentMode
+
+      - run:
+          name: "Build iOS"
+          command: |
+            npx tns usage-reporting disable
+            npx tns error-reporting disable
+            npx tns prepare ios
+            npx tns build ios
+
+
       - save_cache:
           key: npm-v2-{{ checksum "package.json" }}
           paths:
             - node_modules
 
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - TNSTravisTest
+      # - persist_to_workspace:
+      #     root: ~/
+      #     paths:
+      #       - capango-seeker
 
 
   android-setup:
@@ -79,7 +93,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - TNSTravisTest
+            - capango-seeker
 
 
   ios-setup:
@@ -91,10 +105,6 @@ jobs:
 
       - run:
           name: Setup iOS environment
-            # sudo gem install xcodeproj
-            # sudo gem install cocoapods
-            # brew update
-            # brew install xcproj
           command: |
             sudo ruby -e "$(curl -fsSL https://www.nativescript.org/setup/mac)" -- --silentMode
 
@@ -113,7 +123,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - TNSTravisTest
+            - capango-seeker
 
 
   unit-test-ios:
@@ -164,23 +174,23 @@ workflows:
   version: 2
   main_workflow:
     jobs:
-      - node-setup
+      - setup
 
       # - android-setup:
       #     requires:
       #       - node-setup
-      - ios-setup:
-          requires:
-            - node-setup
+      # - ios-setup:
+      #     requires:
+      #       - setup
 
       # - unit-test-android:
       #     requires:
       #       - android-setup
-      - unit-test-ios:
-          requires:
-            - ios-setup
-
-      - deploy:
-          requires:
-            # - unit-test-android
-            - unit-test-ios
+      # - unit-test-ios:
+      #     requires:
+      #       - setup
+      #
+      # - deploy:
+      #     requires:
+      #       # - unit-test-android
+      #       - unit-test-ios
