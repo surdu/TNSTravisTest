@@ -92,9 +92,11 @@ jobs:
           at: ~/
 
       - run:
-          name: Setup CocoaPods
+          name: Setup iOS environment
           command: |
-            curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
+            sudo gem install xcodeproj
+            sudo gem install cocoapods
+            brew install xcproj
 
       - run:
           name: Pre-start iOS Simulator
