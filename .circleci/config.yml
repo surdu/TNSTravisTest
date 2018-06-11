@@ -1,24 +1,15 @@
 version: 2
 
 default_config: &default_config
-  working_directory: ~/TNSTravisTest
-
-ios_config: &ios_config
   macos:
     xcode: "9.2.0"
 
-android_config: &android_config
-  docker:
-    - image: circleci/android:api-25-alpha
-  environment:
-    EMULATOR_API: "25"
+  working_directory: ~/TNSTravisTest
 
 
 jobs:
   node-setup:
     <<: *default_config
-    docker:
-        - image: circleci/node:8
 
     steps:
       - checkout
@@ -46,7 +37,7 @@ jobs:
 
 
   android-setup:
-    <<: [*default_config, *android_config]
+    <<: *default_config
 
     steps:
       - attach_workspace:
@@ -57,17 +48,11 @@ jobs:
             - android-v1-{{ checksum "package.json" }}
 
       - run:
-          name: Install Node
+          name: Setup Android
           command: |
-            curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-
-      # - run:
-      #     name: Setup Android
-      #     command: |
-      #       brew update
-      #       brew cask install android-sdk
-      #       echo y | $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "platforms;android-"$EMULATOR_API "build-tools;27.0.2" "extras;android;m2repository" "extras;google;m2repository"
+            brew update
+            brew cask install android-sdk
+            echo y | $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "platforms;android-"$EMULATOR_API "build-tools;27.0.2" "extras;android;m2repository" "extras;google;m2repository"
 
       # - run:
       #     name: Pre-start Android emulator
@@ -79,8 +64,8 @@ jobs:
 
       - run:
           name: "Build Android"
+            # export GRADLE_OPTS="-Dorg.gradle.daemon=false"
           command: |
-            export GRADLE_OPTS="-Dorg.gradle.daemon=false"
             npx tns usage-reporting disable
             npx tns error-reporting disable
             npx tns prepare android
@@ -100,7 +85,7 @@ jobs:
 
 
   ios-setup:
-    <<: [*default_config, *ios_config]
+    <<: *default_config
 
     steps:
       - attach_workspace:
@@ -130,7 +115,7 @@ jobs:
 
 
   unit-test-ios:
-    <<: [*default_config, *ios_config]
+    <<: *default_config
 
     steps:
       - attach_workspace:
@@ -145,7 +130,7 @@ jobs:
 
 
   unit-test-android:
-    <<: [*default_config, *android_config]
+    <<: *default_config
 
     steps:
       - attach_workspace:
@@ -179,21 +164,21 @@ workflows:
     jobs:
       - node-setup
 
-      - android-setup:
-          requires:
-            - node-setup
+      # - android-setup:
+      #     requires:
+      #       - node-setup
       - ios-setup:
           requires:
             - node-setup
 
-      - unit-test-android:
-          requires:
-            - android-setup
+      # - unit-test-android:
+      #     requires:
+      #       - android-setup
       - unit-test-ios:
           requires:
             - ios-setup
 
       - deploy:
           requires:
-            - unit-test-android
+            # - unit-test-android
             - unit-test-ios
