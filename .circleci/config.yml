@@ -11,7 +11,6 @@ android_config: &android_config
   docker:
     - image: circleci/android:api-25-alpha
   environment:
-    GRADLE_OPTS: -Dorg.gradle.daemon=false
     EMULATOR_API: "25"
 
 
@@ -31,6 +30,7 @@ jobs:
       - run:
           name: Setup NativeScript
           command: |
+            export GRADLE_OPTS="-Dorg.gradle.daemon=false"
             npm install
             npx tns usage-reporting disable
             npx tns error-reporting disable
