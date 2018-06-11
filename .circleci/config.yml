@@ -9,7 +9,6 @@ ios_config: &ios_config
 
 android_config: &android_config
   docker:
-    - image: circleci/node:8
     - image: circleci/android:api-25-alpha
   environment:
     EMULATOR_API: "25"
@@ -56,6 +55,12 @@ jobs:
       - restore_cache:
           keys:
             - android-v1-{{ checksum "package.json" }}
+
+      - run:
+          name: Install Node
+          command: |
+            curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+            sudo apt-get install -y nodejs
 
       # - run:
       #     name: Setup Android
