@@ -96,7 +96,7 @@ jobs:
             # brew update
             # brew install xcproj
           command: |
-            sudo ruby -e "$(curl -fsSL https://www.nativescript.org/setup/mac) --silentMode"
+            sudo ruby -e "$(curl -fsSL https://www.nativescript.org/setup/mac)" -- --silentMode
 
       - run:
           name: Pre-start iOS Simulator
