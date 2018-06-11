@@ -11,6 +11,7 @@ android_config: &android_config
   docker:
     - image: circleci/android:api-25-alpha
   environment:
+    GRADLE_OPTS: -Dorg.gradle.daemon=false
     EMULATOR_API: "25"
 
 
