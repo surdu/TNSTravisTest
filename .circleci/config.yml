@@ -9,8 +9,8 @@ ios_config: &ios_config
 
 android_config: &android_config
   docker:
-    - image: circleci/android:api-25-alpha
     - image: circleci/node:8
+    - image: circleci/android:api-25-alpha
   environment:
     EMULATOR_API: "25"
 
