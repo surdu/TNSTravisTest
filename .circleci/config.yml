@@ -30,7 +30,6 @@ jobs:
       - run:
           name: Setup NativeScript
           command: |
-            export GRADLE_OPTS="-Dorg.gradle.daemon=false"
             npm install
             npx tns usage-reporting disable
             npx tns error-reporting disable
@@ -81,7 +80,7 @@ jobs:
       - run:
           name: "Build Android"
           command: |
-            npm -v
+            export GRADLE_OPTS="-Dorg.gradle.daemon=false"
             npx tns usage-reporting disable
             npx tns error-reporting disable
             npx tns prepare android
