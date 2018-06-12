@@ -17,7 +17,7 @@
     "test-only-smoke-android": "wdio wdio.conf.android.js --suite smoke"
   },
   "dependencies": {
-    "nativescript": "^4.0.2",
+    "nativescript": "^3.4.3",
     "nativescript-theme-core": "~1.0.4",
     "nativescript-unit-test-runner": "^0.3.4",
     "tns-core-modules": "^4.1.0"
