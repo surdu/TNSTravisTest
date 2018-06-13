@@ -4,7 +4,7 @@ default_config: &default_config
   macos:
     xcode: "9.2.0"
 
-  working_directory: ~/capango-seeker
+  working_directory: ~/TNSTravisTest
 
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
           command: |
             npx tns usage-reporting disable
             npx tns error-reporting disable
-            npx tns prepare ios
+            npx tns prepare ios --log trace
             npx tns build ios
 
 workflows:
